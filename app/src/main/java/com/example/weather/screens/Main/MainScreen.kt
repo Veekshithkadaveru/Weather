@@ -1,11 +1,17 @@
 package com.example.weather.screens.Main
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.produceState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.weather.data.DataOrException
@@ -35,7 +41,12 @@ fun MainScreen(
 @Composable
 fun MainScaffold(weather: Weather, navController: NavController) {
     Scaffold(topBar = {
-        WeatherAppBar(title = "Helena, MT")
+        WeatherAppBar(
+            title = weather.city.name + " ,${weather.city.country}",
+            icon = Icons.AutoMirrored.Filled.ArrowBack,
+            navController = navController,
+            elevation = 5.dp
+        )
     }) {
         MainContent(data = weather)
     }
@@ -43,5 +54,8 @@ fun MainScaffold(weather: Weather, navController: NavController) {
 
 @Composable
 fun MainContent(data: Weather) {
-    Text(text = data.city.name)
+    Text(
+        modifier = Modifier.padding(top = 60.dp),
+        text = data.city.name
+    )
 }
