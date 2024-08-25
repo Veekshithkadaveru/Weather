@@ -37,6 +37,7 @@ import com.example.weather.data.DataOrException
 import com.example.weather.model.Weather
 import com.example.weather.model.WeatherItem
 import com.example.weather.util.formatDate
+import com.example.weather.util.formatDateTime
 import com.example.weather.util.formatDecimals
 import com.example.weather.widgets.WeatherAppBar
 
@@ -117,7 +118,43 @@ fun MainContent(data: Weather) {
         }
         HumidityWindPressureRow(weather = weatherItem)
         Divider()
+        SunsetandriseRow(weather = weatherItem)
     }
+}
+
+@Composable
+fun SunsetandriseRow(weather: WeatherItem) {
+    Row(
+        modifier = Modifier
+            .padding(12.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(modifier = Modifier.padding(4.dp)) {
+            Icon(
+                painter = painterResource(id = R.drawable.sunrise),
+                contentDescription = "Sunrise icon",
+                modifier = Modifier.size(30.dp)
+            )
+            Text(
+                text = formatDateTime(weather.sunrise),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+        Row {
+            Icon(
+                painter = painterResource(id = R.drawable.sunset),
+                contentDescription = "Sunset icon",
+                modifier = Modifier.size(30.dp)
+            )
+            Text(
+                text = formatDateTime(weather.sunset),
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+    }
+
 }
 
 @Composable
