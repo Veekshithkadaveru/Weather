@@ -3,6 +3,7 @@ package com.example.weather.screens.Main
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -10,6 +11,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -21,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -28,8 +32,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.weather.R
 import com.example.weather.data.DataOrException
 import com.example.weather.model.Weather
+import com.example.weather.model.WeatherItem
 import com.example.weather.util.formatDate
 import com.example.weather.util.formatDecimals
 import com.example.weather.widgets.WeatherAppBar
@@ -108,7 +114,54 @@ fun MainContent(data: Weather) {
                     fontStyle = FontStyle.Italic
                 )
             }
+        }
+        HumidityWindPressureRow(weather = weatherItem)
+        Divider()
+    }
+}
 
+@Composable
+fun HumidityWindPressureRow(weather: WeatherItem) {
+    Row(
+        modifier = Modifier
+            .padding(12.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(modifier = Modifier.padding(4.dp)) {
+            Icon(
+                painter = painterResource(id = R.drawable.humidity),
+                contentDescription = "Humidity icon",
+                modifier = Modifier.size(20.dp)
+            )
+            Text(
+                text = "${weather.humidity}%",
+                style = MaterialTheme.typography.bodySmall
+            )
+
+        }
+        Row {
+            Icon(
+                painter = painterResource(id = R.drawable.pressure),
+                contentDescription = "Pressure icon",
+                modifier = Modifier.size(20.dp)
+            )
+            Text(
+                text = "${weather.pressure}%",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+        Row {
+            Icon(
+                painter = painterResource(id = R.drawable.wind),
+                contentDescription = "Wind icon",
+                modifier = Modifier.size(20.dp)
+            )
+            Text(
+                text = "${weather.humidity} mph",
+                style = MaterialTheme.typography.bodySmall
+            )
         }
 
     }
