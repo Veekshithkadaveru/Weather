@@ -30,6 +30,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.weather.data.DataOrException
 import com.example.weather.model.Weather
+import com.example.weather.util.formatDate
+import com.example.weather.util.formatDecimals
 import com.example.weather.widgets.WeatherAppBar
 
 @Composable
@@ -41,7 +43,7 @@ fun MainScreen(
     val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
         initialValue = DataOrException(loading = true)
     ) {
-        value = mainViewmodel.getWeatherData(city = "portland")
+        value = mainViewmodel.getWeatherData(city = "lisbon")
     }.value
 
     if (weatherData.loading == true) {
@@ -69,6 +71,7 @@ fun MainScaffold(weather: Weather, navController: NavController) {
 @Composable
 fun MainContent(data: Weather) {
     val imageUrl = "https://cdn2.iconfinder.com/data/icons/weather-flat-14/64/weather07-1024.png"
+    val weatherItem = data.list[0]
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -77,7 +80,7 @@ fun MainContent(data: Weather) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Jan 4",
+            text = formatDate(weatherItem.dt),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 60.dp)
@@ -95,12 +98,12 @@ fun MainContent(data: Weather) {
             ) {
                 WeatherStateImage(imageUrl = imageUrl)
                 Text(
-                    text = "56",
+                    text = formatDecimals(weatherItem.temp.day) + "º",
                     style = MaterialTheme.typography.displaySmall,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "Sunny",
+                    text = weatherItem.weather[0].main,
                     style = MaterialTheme.typography.bodyLarge,
                     fontStyle = FontStyle.Italic
                 )
