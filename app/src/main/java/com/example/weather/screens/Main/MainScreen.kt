@@ -3,11 +3,17 @@ package com.example.weather.screens.Main
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
@@ -50,7 +56,7 @@ fun MainScreen(
     val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
         initialValue = DataOrException(loading = true)
     ) {
-        value = mainViewmodel.getWeatherData(city = "lisbon")
+        value = mainViewmodel.getWeatherData(city = "moscow")
     }.value
 
     if (weatherData.loading == true) {
@@ -77,8 +83,9 @@ fun MainScaffold(weather: Weather, navController: NavController) {
 
 @Composable
 fun MainContent(data: Weather) {
-    val imageUrl = "https://cdn2.iconfinder.com/data/icons/weather-flat-14/64/weather07-1024.png"
     val weatherItem = data.list[0]
+    val imageUrl = "https://api.openweathermap.org/img/wn/${weatherItem.weather[0].icon}.png"
+
     Column(
         modifier = Modifier
             .padding(4.dp)
@@ -119,7 +126,53 @@ fun MainContent(data: Weather) {
         HumidityWindPressureRow(weather = weatherItem)
         Divider()
         SunsetandriseRow(weather = weatherItem)
+        Text(
+            text = "This week",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold
+        )
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            color = Color(0xFFEEF1EF),
+            shape = RoundedCornerShape(14.dp)
+        ) {
+            LazyColumn(
+                modifier = Modifier.padding(2.dp),
+                contentPadding = PaddingValues(1.dp)
+            ) {
+                items(items = data.list) { item: WeatherItem ->
+                    WeatherDetailRow(weather = item)
+
+                }
+            }
+        }
     }
+}
+
+@Composable
+fun WeatherDetailRow(weather: WeatherItem) {
+    val imageUrl = "https://api.openweathermap.org/img/wn/${weather.weather[0].icon}.png"
+    Surface(
+        modifier = Modifier
+            .padding(3.dp)
+            .fillMaxWidth(),
+        shape = CircleShape.copy(topEnd = CornerSize(6.dp))
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                formatDate(weather.dt).split(",")[0],
+                modifier = Modifier.padding(start = 5.dp)
+            )
+            WeatherStateImage(imageUrl = imageUrl)
+        }
+    }
+
 }
 
 @Composable
