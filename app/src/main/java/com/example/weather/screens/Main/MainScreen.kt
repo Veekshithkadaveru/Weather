@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import com.example.weather.data.DataOrException
 import com.example.weather.model.Weather
 import com.example.weather.model.WeatherItem
+import com.example.weather.navigation.WeatherScreens
 import com.example.weather.util.formatDate
 import com.example.weather.util.formatDecimals
 import com.example.weather.widgets.HumidityWindPressureRow
@@ -66,8 +67,12 @@ fun MainScaffold(weather: Weather, navController: NavController) {
     Scaffold(topBar = {
         WeatherAppBar(
             title = weather.city.name + " ,${weather.city.country}",
+            navController=navController,
+            onAddActionClicked = {
+                                 navController.navigate(WeatherScreens.SearchScreen.name)
+            },
             icon = Icons.AutoMirrored.Filled.ArrowBack,
-            navController = navController,
+
             elevation = 5.dp
         )
     }) {
