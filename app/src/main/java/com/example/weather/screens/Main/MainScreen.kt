@@ -31,8 +31,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -170,6 +173,33 @@ fun WeatherDetailRow(weather: WeatherItem) {
                 modifier = Modifier.padding(start = 5.dp)
             )
             WeatherStateImage(imageUrl = imageUrl)
+            Surface(
+                modifier = Modifier.padding(0.dp),
+                shape = CircleShape,
+                color = Color(0xFFFFC400)
+            ) {
+                Text(
+                    weather.weather[0].description,
+                    modifier = Modifier.padding(4.dp),
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+            Text(text = buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(
+                        color = Color.Blue.copy(alpha = 0.7f),
+                        fontWeight = FontWeight.Bold
+                    )
+                ) {
+                    append(formatDecimals(weather.temp.max) + "º")
+                }
+                withStyle(style = SpanStyle(
+                    color = Color.LightGray
+                )
+                ){
+                    append(formatDecimals(weather.temp.min) + "º")
+                }
+            })
         }
     }
 
