@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.weather.navigation.WeatherScreens
 import com.example.weather.widgets.WeatherAppBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -48,7 +49,14 @@ fun SearchScreen(navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "Search")
+                SearchBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally)
+                ) { mCity ->
+                    navController.navigate(WeatherScreens.MainScreen.name + "/$mCity")
+                }
             }
         }
     }
@@ -56,16 +64,22 @@ fun SearchScreen(navController: NavController) {
 
 @Composable
 fun SearchBar(
+    modifier: Modifier = Modifier,
     onSearch: (String) -> Unit = {}
 ) {
     val searchQueryState = rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
-    val valid = remember(searchQueryState.value) { searchQueryState.value.trim().isNotBlank() }
+    val valid = remember(searchQueryState.value) { searchQueryState.value.trim().isNotEmpty() }
     Column {
         CommonTextField(
             valueState = searchQueryState,
             placeHolder = "Seattle",
-            onAction = KeyboardActions { }
+            onAction = KeyboardActions {
+                if (!valid) return@KeyboardActions
+                onSearch(searchQueryState.value.trim())
+                searchQueryState.value = ""
+                keyboardController?.hide()
+            }
         )
     }
 }
@@ -93,6 +107,6 @@ fun CommonTextField(
         shape = RoundedCornerShape(15.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp)
+            .padding(top = 42.dp, start = 10.dp, end = 10.dp)
     )
 }

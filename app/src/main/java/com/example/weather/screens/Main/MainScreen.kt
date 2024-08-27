@@ -45,13 +45,14 @@ import com.example.weather.widgets.WeatherStateImage
 @Composable
 fun MainScreen(
     navController: NavController,
-    mainViewmodel: MainViewmodel = hiltViewModel()
+    mainViewmodel: MainViewmodel = hiltViewModel(),
+    city: String?
 ) {
 
     val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
         initialValue = DataOrException(loading = true)
     ) {
-        value = mainViewmodel.getWeatherData(city = "moscow")
+        value = mainViewmodel.getWeatherData(city = city.toString())
     }.value
 
     if (weatherData.loading == true) {
@@ -67,9 +68,9 @@ fun MainScaffold(weather: Weather, navController: NavController) {
     Scaffold(topBar = {
         WeatherAppBar(
             title = weather.city.name + " ,${weather.city.country}",
-            navController=navController,
+            navController = navController,
             onAddActionClicked = {
-                                 navController.navigate(WeatherScreens.SearchScreen.name)
+                navController.navigate(WeatherScreens.SearchScreen.name)
             },
             icon = Icons.AutoMirrored.Filled.ArrowBack,
 
