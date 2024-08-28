@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.weather.navigation.WeatherScreens
 
 @Composable
 fun WeatherAppBar(
@@ -147,7 +148,15 @@ fun SettingDropDownMenu(
                     }
                     Text(
                         text = text,
-                        modifier = Modifier.clickable { },
+                        modifier = Modifier.clickable {
+                            navController.navigate(
+                                when (text) {
+                                    "About" -> WeatherScreens.AboutScreen.name
+                                    "Favourites" -> WeatherScreens.FavouriteScreen.name
+                                    else -> WeatherScreens.SettingsScreen.name
+                                }
+                            )
+                        },
                         fontWeight = FontWeight.W300
                     )
                 }
