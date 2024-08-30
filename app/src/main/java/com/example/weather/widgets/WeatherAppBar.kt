@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
@@ -37,8 +38,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.weather.model.Favorite
 import com.example.weather.navigation.WeatherScreens
+import com.example.weather.screens.favourites.FavoriteViewmodel
 
 @Composable
 fun WeatherAppBar(
@@ -47,6 +51,7 @@ fun WeatherAppBar(
     isMainScreen: Boolean = true,
     elevation: Dp = 0.dp,
     navController: NavController,
+    favoriteViewmodel: FavoriteViewmodel = hiltViewModel(),
     onAddActionClicked: () -> Unit = {},
     onButtonClicked: () -> Unit = {}
 ) {
@@ -100,6 +105,24 @@ fun WeatherAppBar(
                     modifier = Modifier.clickable {
                         onButtonClicked.invoke()
                     }
+                )
+            }
+            if (isMainScreen) {
+                Icon(
+                    imageVector = Icons.Default.FavoriteBorder,
+                    contentDescription = "Favorite Icon",
+                    modifier = Modifier
+                        .scale(0.9f)
+                        .clickable {
+                            val dataList = title.split(",")
+                            favoriteViewmodel.insertFavorite(
+                                Favorite(
+                                    city = dataList[0],
+                                    country = dataList[1]
+                                )
+
+                            )
+                        }
                 )
             }
         },
