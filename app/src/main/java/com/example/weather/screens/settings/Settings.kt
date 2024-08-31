@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -24,12 +27,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.weather.model.Unit
 import com.example.weather.widgets.WeatherAppBar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(
+    navController: NavController,
+    settingsViewmodel: SettingsViewmodel = hiltViewModel()
+) {
     var unitToggleState by remember { mutableStateOf(false) }
     val measurementsUnits = listOf("Imperial(F)", "Metric(C)")
     var choiceState by remember { mutableStateOf("") }
@@ -59,10 +68,10 @@ fun SettingsScreen(navController: NavController) {
                     checked = !unitToggleState,
                     onCheckedChange = {
                         unitToggleState = !it
-                        if (unitToggleState) {
-                            choiceState = "Imperial(F)"
+                        choiceState = if (unitToggleState) {
+                            "Imperial(F)"
                         } else {
-                            choiceState = "Metric(C)"
+                            "Metric(C)"
                         }
                     },
                     modifier = Modifier
@@ -74,6 +83,25 @@ fun SettingsScreen(navController: NavController) {
                         )
                 ) {
                     Text(text = if (unitToggleState) "Fahrenheit °F" else "Celsius °C")
+                }
+                Button(
+                    onClick = {
+                        settingsViewmodel.deleteAllUnits()
+                        settingsViewmodel.insertUnit(Unit(unit = choiceState))
+                    },
+                    modifier = Modifier
+                        .padding(3.dp)
+                        .align(Alignment.CenterHorizontally),
+                    shape = RoundedCornerShape(34.dp),
+                    colors = ButtonDefaults
+                        .buttonColors(containerColor = Color(0xFFEFBE42))
+                ) {
+                    Text(
+                        text = "Save",
+                        modifier = Modifier.padding(4.dp),
+                        color = Color.White,
+                        fontSize = 17.sp
+                    )
                 }
             }
         }
