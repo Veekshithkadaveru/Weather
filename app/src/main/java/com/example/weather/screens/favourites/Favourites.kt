@@ -79,9 +79,8 @@ fun CityRow(
 ) {
     Surface(
         Modifier
-
+            .padding(2.dp)
             .padding(top = 36.dp)
-            .padding(3.dp)
             .fillMaxWidth()
             .height(50.dp)
             .clickable {
