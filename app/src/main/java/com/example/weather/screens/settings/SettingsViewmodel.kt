@@ -26,8 +26,8 @@ class SettingsViewmodel @Inject constructor(private val repository: WeatherDbRep
         viewModelScope.launch (Dispatchers.IO){
             repository.getUnits().distinctUntilChanged()
                 .collect { listOfUnits ->
-                    if (listOfUnits.isNullOrEmpty()) {
-                        Log.d("TAG", ":Empty List")
+                    if (listOfUnits.isEmpty()) {
+               //         repository.insertUnit(Unit("imperial"))
                     } else {
                         _unitList.value = listOfUnits
                     }
