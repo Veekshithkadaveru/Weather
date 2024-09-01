@@ -17,7 +17,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,7 +43,11 @@ fun SettingsScreen(
 ) {
     var unitToggleState by remember { mutableStateOf(false) }
     val measurementsUnits = listOf("Imperial(F)", "Metric(C)")
-    var choiceState by remember { mutableStateOf("") }
+    val choiceFromDb = settingsViewmodel.unitList.collectAsState().value
+    val defaultChoice =
+        if (choiceFromDb.isEmpty()) measurementsUnits[0]
+        else choiceFromDb[0].unit
+    var choiceState by remember { mutableStateOf(defaultChoice) }
     Scaffold(topBar = {
         WeatherAppBar(
             title = "Settings",
